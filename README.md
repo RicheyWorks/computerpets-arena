@@ -1,36 +1,40 @@
 # Arena
 
-**Pet Arena Battles** — Turn-based auto-battler using live pet stats and NFT gear as loadout.
+**Care-driven battles for ComputerPets.**
 
-Part of [ComputerPets](https://github.com/RicheyWorks/computerpets). Map: [computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem).
+A planned auto-battler where pet vitals, legal gear, and between-round stances shape the match.
 
-| | |
+**Stage: design scaffold.** This checkout contains a design document and a source placeholder. The experience below is planned; there is no runnable app or integrated service yet.
+
+[Status](#status) · [Planned experience](#planned-experience) · [Contributor quickstart](#contributor-quickstart) · [Game design](docs/DESIGN.md) · [Ecosystem map](https://github.com/RicheyWorks/computerpets-ecosystem)
+
+## Status
+
+| Available today | What you can inspect |
 | --- | --- |
-| Status | Design scaffold — loop and engine frozen |
-| License | MIT |
-| Tokens | Minigames never mint or burn. Tired overlay, not a dead lineage. |
-| First pet | [Meet Rui first](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md). This game is optional. |
+| [Game design](docs/DESIGN.md) | Intended behavior, boundaries, and planned dependencies. |
+| [Source placeholder](src/Game.cs) | Empty C# class; no Unity project or scene is checked in. |
+| [MIT license](LICENSE) | Licensing terms for the repository. |
 
-## The loop
+Gameplay, endpoints, integration arrows, and failure handling on this page describe implementation targets. No build/test harness, CI workflow, or product screenshots are included in this scaffold.
 
-Rui does not leave the desktop to fight. Arena is the coliseum: 210 kinds, mood and stamina from the overlay, gear from Bazaar. A hungry pet underperforms. A well-cared pet hits above its rarity.
+## Planned experience
 
-## Who plays
+- Draft 3 pets from your kennel.
+- Gear slots: hat / mark / accessory (legal trait slots only).
+- Auto-resolve rounds; you pick stance (guard, frenzy, trick) between rounds.
+- Winner takes treat-coin via Ledger, never the opponent NFT.
 
-Players who want a fight without leaving the canon.
-
-## What it is not
-
-Not a place to lose an NFT. Hungry pets underperform; cash does not buy a faster species.
-
-## Genre and engine
+### Planned technology
 
 - Genre: **Auto-battler**
 - Engine: **Unity / WebGL**
 - Stack: Unity 6 · C# · WebGL export · NFT gear from Minter · stats from flagship vitals
 - Default surface: `WebGL / Unity editor`
 
-## Architecture
+### Planned connections
+
+These arrows show intended dependencies, rather than working integrations.
 
 ```mermaid
 flowchart LR
@@ -40,72 +44,48 @@ flowchart LR
   arena --> ledger
 ```
 
-## How you play
+## Contributor quickstart
 
-1. Draft 3 pets from your kennel.
-2. Gear slots: hat / mark / accessory (legal trait slots only).
-3. Auto-resolve rounds; you pick stance (guard, frenzy, trick) between rounds.
-4. Winner takes treat-coin via Ledger, never the opponent NFT.
+With access to this private repository, Git and PowerShell are enough to review the scaffold:
 
-## First slice
+```powershell
+git clone https://github.com/RicheyWorks/computerpets-arena.git
+Set-Location computerpets-arena
+Get-Content docs/DESIGN.md
+Get-Content src/Game.cs
+```
 
-Build this and stop.
+Read [Game design](docs/DESIGN.md) before choosing implementation details. The commands above inspect the checked-in files; app installation, editor launch, and server startup become possible after a buildable project and entry point are added.
+
+### First implementation target
 
 **3v3 auto-battle, Rui vs dummy, stance pick between rounds, treat-coin purse via Ledger.**
 
 You know it works when: Disconnect: 60s reconnect then forfeit treats, not pets. Illegal hybrid loadout rejected at lock-in.
 
-## Environment
+Treat this as an acceptance target for a future implementation. Start with the documented slice, add the required project setup and focused tests, and update these instructions with commands that work from a fresh clone.
 
-Unity 6. `API_BASE` for vitals lock-in.
+## Design boundaries
 
-## Failure doctrine
+1. Minigames cannot mint or burn NFTs by themselves (Minter is the write path).
+2. Stats come from lived overlay care + Dojo caps, not cash shop.
+3. Species kits stay inside Lore. Illegal hybrids never spawn.
+4. Fail soft: the desktop overlay process is not this process.
+
+**Required failure behavior:**
 
 Disconnect mid-fight → pause + 60s reconnect, then forfeit treats not pets. Illegal hybrid loadout → reject at lock-in. WebGL GPU fail → desktop overlay still walks.
 
-Canon rules that never yield:
+## Ecosystem
 
-- 210 living kinds. No illegal hybrids.
-- Overlay pets can get tired, sick, or hide. Tokens are not burned by a minigame.
-- Desktop walk stays the main quest. Closing Arena must leave Rui walking.
+- [computerpets](https://github.com/RicheyWorks/computerpets) (vitals)
+- [computerpets-minter](https://github.com/RicheyWorks/computerpets-minter) (gear tokens)
+- [computerpets-bazaar](https://github.com/RicheyWorks/computerpets-bazaar)
+- [computerpets-ledger](https://github.com/RicheyWorks/computerpets-ledger)
+- [computerpets-dojo](https://github.com/RicheyWorks/computerpets-dojo) (trained stats)
 
-## Neighbors
-
-- computerpets (vitals)
-- computerpets-minter (gear tokens)
-- computerpets-bazaar
-- computerpets-ledger
-- computerpets-dojo (trained stats)
-
-## Layout
-
-```
-computerpets-arena/
-  README.md
-  LICENSE
-  docs/DESIGN.md
-  src/                implementation lands here
-```
-
-## Run (Windows)
-
-```powershell
-Open Arena/ in Unity Hub; File > Build Settings > WebGL. Or npm run preview after export.
-```
-
-Meet Rui first via the [flagship start-here](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md). This game is optional.
-
-## Links
-
-- Flagship: [RicheyWorks/computerpets](https://github.com/RicheyWorks/computerpets)
-- This repo: [RicheyWorks/computerpets-arena](https://github.com/RicheyWorks/computerpets-arena)
-- Map: [RicheyWorks/computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem)
-- Design file: [docs/DESIGN.md](docs/DESIGN.md)
+Start with the [ComputerPets flagship](https://github.com/RicheyWorks/computerpets) for the desktop pet. This repository describes an optional extension; the [ecosystem map](https://github.com/RicheyWorks/computerpets-ecosystem) explains the broader plan.
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
-
----
-
-*Two hundred ten living kinds. Keep them so a line does not go quiet.*
